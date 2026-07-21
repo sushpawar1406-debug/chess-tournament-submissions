@@ -34,7 +34,7 @@ Complete the assigned task in your local repository and save your changes.
 
 or
 
-If you have already completed the project before forking this repository:
+If you have already completed the project using another repository then follow this steps:
 
 1. Copy all of your completed project files into your forked repository.
 3. Make sure all required project files are included.
