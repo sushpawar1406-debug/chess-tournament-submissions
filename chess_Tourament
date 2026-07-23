@@ -1,0 +1,9 @@
+Initial project setup for Chess Tournament Management System
+Add player CRUD operations using SQLite
+Implement tournament CRUD functionality
+Add player registration to tournaments
+Implement random player pairing and match generation
+Add random winner selection and store match results
+Implement tournament ranking and top 3 winners display
+Fix match generation and ranking calculation issues
+Complete Chess Tournament Management System with SQLite
