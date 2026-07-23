@@ -1,0 +1,159 @@
+create database play;
+use play;
+
+CREATE TABLE Players (
+    PlayerID INTEGER PRIMARY KEY auto_increment,
+    PlayerName TEXT NOT NULL,
+    Age INTEGER,
+    Rating INTEGER,
+    Country TEXT
+);
+
+
+CREATE TABLE Tournaments (
+    TournamentID INTEGER PRIMARY KEY auto_increment,
+    TournamentName TEXT NOT NULL,
+    Location TEXT,
+    TournamentDate TEXT
+);
+
+
+CREATE TABLE TournamentPlayers (
+    ID INTEGER PRIMARY KEY auto_increment,
+    TournamentID INTEGER,
+    PlayerID INTEGER,
+    FOREIGN KEY(TournamentID) REFERENCES Tournaments(TournamentID),
+    FOREIGN KEY(PlayerID) REFERENCES Players(PlayerID)
+);
+
+
+CREATE TABLE Matches (
+    MatchID INTEGER PRIMARY KEY auto_increment,
+    TournamentID INTEGER,
+    Player1ID INTEGER,
+    Player2ID INTEGER,
+    WinnerID INTEGER,
+    RoundNo INTEGER,
+    FOREIGN KEY(TournamentID) REFERENCES Tournaments(TournamentID),
+    FOREIGN KEY(Player1ID) REFERENCES Players(PlayerID),
+    FOREIGN KEY(Player2ID) REFERENCES Players(PlayerID),
+    FOREIGN KEY(WinnerID) REFERENCES Players(PlayerID)
+);
+
+INSERT INTO Players (PlayerName, Age, Rating, Country)
+VALUES
+('Akshay',23,1700,'India'),
+('Rahul',25,1800,'India'),
+('Aman',21,1600,'India'),
+('Priya',24,1750,'India');
+
+SELECT * FROM Players;
+
+UPDATE Players
+SET Rating = 1850
+WHERE PlayerID = 2;
+
+DELETE FROM Players
+WHERE PlayerID = 4;
+
+
+INSERT INTO Tournaments
+(TournamentName,Location,TournamentDate)
+VALUES
+('Winter Chess Championship',
+'Pune',
+'2026-08-10');
+
+SELECT * FROM Tournaments;
+
+UPDATE Tournaments
+SET Location='Mumbai'
+WHERE TournamentID=1;
+
+DELETE FROM Tournaments
+WHERE TournamentID=1;
+
+INSERT INTO TournamentPlayers(TournamentID,PlayerID)
+VALUES
+(1,1),
+(1,2),
+(1,3),
+(1,4);
+
+SELECT
+t.TournamentName,
+p.PlayerName
+FROM TournamentPlayers tp
+JOIN Players p
+ON tp.PlayerID=p.PlayerID
+JOIN Tournaments t
+ON tp.TournamentID=t.TournamentID;
+
+SELECT PlayerID
+FROM TournamentPlayers
+WHERE TournamentID=1
+ORDER BY RANDOM();
+
+SELECT
+CASE
+WHEN ABS(RANDOM()) % 2 = 0
+THEN Player1ID
+ELSE Player2ID
+END AS WinnerID
+FROM
+(
+SELECT 3 AS Player1ID,
+       1 AS Player2ID
+);
+
+INSERT INTO Matches
+(TournamentID,
+Player1ID,
+Player2ID,
+WinnerID,
+RoundNo)
+
+VALUES
+
+(1,3,1,3,1),
+
+(1,4,2,2,1);
+
+SELECT
+m.MatchID,
+p1.PlayerName AS Player1,
+p2.PlayerName AS Player2,
+w.PlayerName AS Winner
+FROM Matches m
+JOIN Players p1
+ON m.Player1ID=p1.PlayerID
+JOIN Players p2
+ON m.Player2ID=p2.PlayerID
+JOIN Players w
+ON m.WinnerID=w.PlayerID;
+
+
+SELECT
+p.PlayerID,
+p.PlayerName,
+COUNT(m.WinnerID) AS TotalWins
+FROM Players p
+LEFT JOIN Matches m
+ON p.PlayerID=m.WinnerID
+GROUP BY
+p.PlayerID,
+p.PlayerName
+ORDER BY TotalWins DESC;
+
+
+SELECT
+p.PlayerName,
+COUNT(m.WinnerID) AS Wins
+FROM Players p
+LEFT JOIN Matches m
+ON p.PlayerID=m.WinnerID
+GROUP BY
+p.PlayerID,
+p.PlayerName
+ORDER BY Wins DESC
+LIMIT 3;
